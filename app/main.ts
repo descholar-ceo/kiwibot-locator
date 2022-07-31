@@ -9,3 +9,5 @@ const { env: { PORT }} = process;
 const app = new App(controllers, Number(PORT));
  
 app.listen();
+
+export default app;
