@@ -20,7 +20,7 @@
       }
     ],
     "paths": {
-      "/orders": {
+      "/api/orders": {
         "post": {
           "tags": [
             "orders"
@@ -86,7 +86,7 @@
           "x-codegen-response-body-name": "body"
         }
       },
-      "/orders/{id}": {
+      "/api/orders/{id}": {
         "put": {
           "tags": [
             "orders"
@@ -166,7 +166,7 @@
           "x-codegen-request-body-name": "body"
         }
       },
-      "/orders/creator/{id}": {
+      "/api/orders/creator/{id}": {
         "get": {
           "tags": [
             "orders"
@@ -197,7 +197,7 @@
           "x-codegen-request-body-name": "body"
         }
       },
-      "/orders/zone/{id}": {
+      "/api/orders/zone/{id}": {
         "get": {
           "tags": [
             "orders"
@@ -246,7 +246,7 @@
           "x-codegen-request-body-name": "body"
         }
       },
-      "/bots": {
+      "/api/bots": {
         "post": {
           "tags": [
             "bots"
@@ -312,7 +312,7 @@
           "x-codegen-response-body-name": "body"
         }
       },
-      "/bots/{id}": {
+      "/api/bots/{id}": {
         "put": {
           "tags": [
             "bots"
@@ -392,7 +392,7 @@
           "x-codegen-request-body-name": "body"
         }
       },
-      "/bots/zone/{id}": {
+      "/api/bots/zone/{id}": {
         "get": {
           "tags": [
             "bots"
@@ -441,7 +441,7 @@
           "x-codegen-request-body-name": "body"
         }
       },
-      "/bot-orders": {
+      "/api/bot-orders": {
         "post": {
           "tags": [
             "bot-orders"
@@ -507,7 +507,7 @@
           "x-codegen-response-body-name": "body"
         }
       },
-      "/bot-orders/{id}": {
+      "/api/bot-orders/{id}": {
         "delete": {
           "tags": [
             "bot-orders"
@@ -567,7 +567,7 @@
           "x-codegen-request-body-name": "body"
         }
       },
-      "/bot-orders/bot/{botId}": {
+      "/api/bot-orders/bot/{botId}": {
         "get": {
           "tags": [
             "bot-orders"
@@ -616,7 +616,7 @@
           "x-codegen-request-body-name": "body"
         }
       },
-      "/bot/{botId}/suggestion-by-distance": {
+      "/api/bot-orders/bot/{botId}/suggestion-by-distance": {
         "get": {
           "tags": [
             "bot-orders"
@@ -669,7 +669,7 @@
           "x-codegen-request-body-name": "body"
         }
       },
-      "/bot/{botId}/suggestion-by-zone": {
+      "/api/bot-orders/bot/{botId}/suggestion-by-zone": {
         "get": {
           "tags": [
             "bot-orders"
@@ -722,7 +722,7 @@
           "x-codegen-request-body-name": "body"
         }
       },
-      "/bot-orders/order/{orderId}": {
+      "/api/bot-orders/order/{orderId}": {
         "get": {
           "tags": [
             "bot-orders"
@@ -771,7 +771,7 @@
           "x-codegen-request-body-name": "body"
         }
       },
-      "/order/{orderId}/suggestion-by-distance": {
+      "/api/bot-orders/order/{orderId}/suggestion-by-distance": {
         "get": {
           "tags": [
             "bot-orders"
@@ -824,7 +824,7 @@
           "x-codegen-request-body-name": "body"
         }
       },
-      "/order/{orderId}/suggestion-by-zone": {
+      "/api/bot-orders/order/{orderId}/suggestion-by-zone": {
         "get": {
           "tags": [
             "bot-orders"
