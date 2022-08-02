@@ -22,9 +22,11 @@ class BotOrderController {
     this.router.get(`${this.path}/:id`, this.show.bind(this));
     this.router.delete(`${this.path}/:id`, this.removeOrderFromBot.bind(this));
     this.router.get(`${this.path}/bot/:botId`, this.getByBotId.bind(this));
-    this.router.get(`${this.path}/bot/suggestion/:botId`, this.getOrdersSuggestionForBotByDistance.bind(this));
+    this.router.get(`${this.path}/bot/:botId/suggestion-by-distance`, this.getOrdersSuggestionForBotByDistance.bind(this));
+    this.router.get(`${this.path}/bot/:botId/suggestion-by-zone`, this.getOrdersSuggestionForBotByZone.bind(this));
     this.router.get(`${this.path}/order/:orderId`, this.getByOrderId.bind(this));
-    this.router.get(`${this.path}/order/suggestion/:orderId`, this.getBotsSuggestionForOrderByDistance.bind(this));
+    this.router.get(`${this.path}/order/:orderId/suggestion-by-distance`, this.getBotsSuggestionForOrderByDistance.bind(this));
+    this.router.get(`${this.path}/order/:orderId/suggestion-by-zone`, this.getBotsSuggestionForOrderByZone.bind(this));
   }
  
   private all = async (req: Request, res: Response): Promise<void> => {
@@ -72,6 +74,18 @@ class BotOrderController {
   private getBotsSuggestionForOrderByDistance = async (req: Request, res: Response): Promise<void> => {
     const { params: { orderId }, query: { page, limit }} = req;
     const { status, message, data } = await this.botOrderService.getBotsSuggestionForOrderByDistance(orderId, Number(page), Number(limit));
+    sendResponse(res, status, message, data);
+  }
+
+  private getOrdersSuggestionForBotByZone = async (req: Request, res: Response): Promise<void> => {
+    const { params: { botId }, query: { page, limit }} = req;
+    const { status, message, data } = await this.botOrderService.getOrdersSuggestionForBotByZone(botId, Number(page), Number(limit));
+    sendResponse(res, status, message, data);
+  }
+
+  private getBotsSuggestionForOrderByZone = async (req: Request, res: Response): Promise<void> => {
+    const { params: { orderId }, query: { page, limit }} = req;
+    const { status, message, data } = await this.botOrderService.getBotsSuggestionForOrderByZone(orderId, Number(page), Number(limit));
     sendResponse(res, status, message, data);
   }
 }

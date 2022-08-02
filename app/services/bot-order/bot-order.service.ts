@@ -1,13 +1,15 @@
 import { preparePaging } from './../../utils/prepare-paging.util';
 import { getDistanceBetweenTwoCoodinates } from './../../utils/distance';
 import { ORDER_ASSIGNED, ORDER_PENDING } from './../../models/order/constants';
-import { BOT_BUSY } from './../../models/bot/constants';
+import { BOT_BUSY, BOT_AVAILABLE } from './../../models/bot/constants';
 import BotOrder from '../../models/bot-order/bot-order.model';
 import BotOrderInterface from '../../models/bot-order/bot-order.interface';
 import statuses from '../../utils/status';
 import ResponseDto from '../response.dto';
 import BotService from '../bot/bot.service';
 import OrderService from '../order/order.service';
+import BotInterface from '../../models/bot/bot.interface';
+import OrderInterface from '../../models/order/order.interface';
 
 export default class BotOrderService {
     private readonly botOrderModel: BotOrder;
@@ -96,7 +98,7 @@ export default class BotOrderService {
     async getOrdersSuggestionForBotByDistance(id: string, page: number, limit: number): Promise<ResponseDto> {
         const { statusCodes: { CODE_OK }} = statuses;
         const bot = await this.botService.getBotById(id);
-        if (bot?.status !== CODE_OK || bot?.data?.status !== BOT_BUSY) {
+        if (bot?.status !== CODE_OK || bot?.data?.status !== BOT_AVAILABLE) {
             return { status: bot?.status, message: bot?.message, data: null };
         }
         const pendingOrders = await this.orderService.getPendingOrders(page, limit);
@@ -132,6 +134,52 @@ export default class BotOrderService {
             distancedBots.push({ bot, distanceFromThisOrderInKM: distance });
         }
         return { status: CODE_OK, message: 'Suggestions retrieved', data: this.sortArr(distancedBots) };
+    }
+    async getBotsSuggestionForOrderByZone(id: string, page: number, limit: number): Promise<ResponseDto> {
+        const { statusCodes: { CODE_OK, CODE_BAD_REQUEST, CODE_NOT_FOUND }} = statuses;
+        const order = await this.orderService.getOrderById(id);
+        if (order?.status !== CODE_OK || order?.data?.state !== ORDER_PENDING) {
+            return { status: CODE_BAD_REQUEST, message: 'This order is not pending or not found', data: null };
+        }
+        const botsOfTheSameZone = await this.botService.getByZone(order?.data?.zone_id, page, limit);
+        if (botsOfTheSameZone?.status !== CODE_OK || botsOfTheSameZone?.data?.length <= 0) {
+            return { status: botsOfTheSameZone?.status, message: botsOfTheSameZone?.message, data: null };
+        }
+        const availableBots = botsOfTheSameZone?.data.filter((bot: BotInterface) => bot.status === BOT_AVAILABLE);
+        if (availableBots?.length <= 0) {
+            return { status: CODE_NOT_FOUND, message: 'No available bots in the zone of the order specified', data: null };
+        }
+        const distancedBots: any[] = [];
+        for (const bot of availableBots) {
+            const { lat, lon } = bot?.location;
+            const { pickup_lat, pickup_lon } = order?.data?.pickup;
+            const distance = getDistanceBetweenTwoCoodinates(pickup_lat, pickup_lon, lat, lon);
+            distancedBots.push({ bot, distanceFromThisOrderInKM: distance });
+        }
+        return { status: CODE_OK, message: 'Suggestions retrieved', data: this.sortArr(distancedBots) };
+    }
+    async getOrdersSuggestionForBotByZone(id: string, page: number, limit: number): Promise<ResponseDto> {
+        const { statusCodes: { CODE_OK, CODE_NOT_FOUND }} = statuses;
+        const bot = await this.botService.getBotById(id);
+        if (bot?.status !== CODE_OK || bot?.data?.status !== BOT_AVAILABLE) {
+            return { status: bot?.status, message: bot?.message, data: null };
+        }
+        const ordersOfTheSameZone = await this.orderService.getByZone(bot?.data?.zone_id, page, limit);
+        if (ordersOfTheSameZone?.status !== CODE_OK) {
+            return { status: ordersOfTheSameZone?.status, message: ordersOfTheSameZone?.message, data: null };
+        }
+        const pendingOrders = ordersOfTheSameZone?.data?.filter((order: OrderInterface) => order.state === ORDER_PENDING);
+        if(pendingOrders?.length <= 0) {
+            return { status: CODE_NOT_FOUND, message: 'No pending orders found from the zone of the specified bot', data: null}
+        }
+        const distancedOrders: any[] = [];
+        for (const order of pendingOrders) {
+            const { lat, lon } = bot?.data?.location;
+            const { pickup_lat, pickup_lon } = order?.pickup;
+            const distance = getDistanceBetweenTwoCoodinates(lat, lon, pickup_lat, pickup_lon);
+            distancedOrders.push({ order, distanceFromThisBotInKM: distance });
+        }
+        return { status: CODE_OK, message: 'Suggestions retrieved', data: this.sortArr(distancedOrders) };
     }
 
     private sortArr = (arr: any[] = []) => arr.sort((elt1, elt2) => 

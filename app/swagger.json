@@ -616,13 +616,66 @@
           "x-codegen-request-body-name": "body"
         }
       },
-      "/bot/suggestion/{botId}": {
+      "/bot/{botId}/suggestion-by-distance": {
         "get": {
           "tags": [
             "bot-orders"
           ],
           "summary": "get all orders to suggest for a given bot by sending a botId  depending on the distance between that bot and and that order from the `bot location` and `order pickup location`",
           "operationId": "getOrdersSuggestionForBotByDistance",
+          "parameters": [
+            {
+              "name": "botId",
+              "in": "path",
+              "description": "Bot ID to which we get their suggested orders by distance",
+              "required": true,
+              "schema": {
+                "type": "string"
+              }
+            }
+          ],
+          "query": [{
+            "name": "page",
+            "in": "query",
+            "description": "Page number",
+            "required": false,
+            "schema": {
+              "type": "integer"
+            }
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "description": "Limit number",
+            "required": false,
+            "schema": {
+              "type": "integer"
+            }
+          }],
+          "responses": {
+            "400": {
+              "description": "[Order not pending] or [Bot not available]",
+              "content": {}
+            },
+            "404": {
+              "description": "Bot or Order not found",
+              "content": {}
+            },
+            "200": {
+              "description": "Bots retrieved",
+              "content": {}
+            }
+          },
+          "x-codegen-request-body-name": "body"
+        }
+      },
+      "/bot/{botId}/suggestion-by-zone": {
+        "get": {
+          "tags": [
+            "bot-orders"
+          ],
+          "summary": "get all orders to suggest for a given bot by sending a botId  depending on the zone and distance between that bot and and that order from the `bot location` and `order pickup location`, the bots retrieved will be coming from the same zone with the orders.",
+          "operationId": "getOrdersSuggestionForBotByZone",
           "parameters": [
             {
               "name": "botId",
@@ -718,13 +771,66 @@
           "x-codegen-request-body-name": "body"
         }
       },
-      "/order/suggestion/{orderId}": {
+      "/order/{orderId}/suggestion-by-distance": {
         "get": {
           "tags": [
             "bot-orders"
           ],
           "summary": "get all bots to suggest for a given order by sending a orderId depending on the distance between that bot and and that order from the `bot location` and `order pickup location`",
           "operationId": "getBotsSuggestionForOrderByDistance",
+          "parameters": [
+            {
+              "name": "orderId",
+              "in": "path",
+              "description": "Order ID to which we get their suggested bots by distance",
+              "required": true,
+              "schema": {
+                "type": "string"
+              }
+            }
+          ],
+          "query": [{
+            "name": "page",
+            "in": "query",
+            "description": "Page number",
+            "required": false,
+            "schema": {
+              "type": "integer"
+            }
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "description": "Limit number",
+            "required": false,
+            "schema": {
+              "type": "integer"
+            }
+          }],
+          "responses": {
+            "400": {
+              "description": "[Order not pending] or [Bot not available]",
+              "content": {}
+            },
+            "404": {
+              "description": "Bot or Order not found",
+              "content": {}
+            },
+            "200": {
+              "description": "Bots retrieved",
+              "content": {}
+            }
+          },
+          "x-codegen-request-body-name": "body"
+        }
+      },
+      "/order/{orderId}/suggestion-by-zone": {
+        "get": {
+          "tags": [
+            "bot-orders"
+          ],
+          "summary": "get all bots to suggest for a given order by sending a orderId depending on zone and the distance between that bot and and that order from the `bot location` and `order pickup location`, orders retrieved will be coming from the same zone as the bot",
+          "operationId": "getBotsSuggestionForOrderByZone",
           "parameters": [
             {
               "name": "orderId",

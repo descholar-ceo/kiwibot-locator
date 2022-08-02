@@ -32,6 +32,8 @@ You will need to create a file and name it `firebase-service-account.json` on th
 
 If that command runs successfully and you have created that file and pasted the keys, then you have the server up and running on your local computer, on PORT 4000.
 
+As a note: After running the server, you can find all API documentation by heading to your preferred browser and go to `http://localhost:4000/api/docs`
+
 ## Features
 1. User can `register a new bot`, by sending the following in request body:
 ```javascript
@@ -122,10 +124,15 @@ In the meanwhile, you can test this feature by querying this endpoint `/api/orde
 
 17. User can `Remove all assignments from a bot or from an order` by sending the `bot id` or the `order id` as a query param.
 
-18. User can `get a list of orders suggested for a given bot`, depending on the distance between that bot and those orders in descending order from the nearest one to the furthest by sending `bot_id` as a query param, paginated by sending `page` and `limit` as queries. If no page nor limit, by default, they will get 10 first orders. If they specify the page they want without specifying which limit, by default they will get 10 records per page.
+18. User can `get a list of orders suggested for a given bot by distance`, depending on the distance between that bot and those orders in descending order from the nearest one to the furthest by sending `bot_id` as a query param, paginated by sending `page` and `limit` as queries. If no page nor limit, by default, they will get 10 first orders. If they specify the page they want without specifying which limit, by default they will get 10 records per page.
 
+19. User can `get a list of bots suggested for a given order by distance`, by sending `order_id` as a query param, paginated by sending `page` and `limit` as queries. If no page nor limit, by default, they will get 10 first bots. If they specify the page they want without specifying which limit, by default they will get 10 records per page.
 
-19. User can `get a list of bots suggested for a given order`, by sending `order_id` as a query param, paginated by sending `page` and `limit` as queries. If no page nor limit, by default, they will get 10 first bots. If they specify the page they want without specifying which limit, by default they will get 10 records per page.
+20. User can `get a list of bots suggested for a given order by zone`, by sending `order_id` as a query param, paginated by sending `page` and `limit` as queries. This feature will help a user to get all suggestions of bots from the same zone with the specified order and they will be sorted by distance in an ascending order from the nearest bot to the furthest. If no page nor limit, by default, they will get 10 first bots. If they specify the page they want without specifying which limit, by default they will get 10 records per page.
+
+21. User can `get a list of orders suggested for a given bot by zone`, by sending `bot_id` as a query param, paginated by sending `page` and `limit` as queries. This feature will help a user to get all suggestions of orders from the same zone with the specified bot and they will be sorted by distance in an ascending order from the nearest order to the furthest order. If no page nor limit, by default, they will get 10 first bots. If they specify the page they want without specifying which limit, by default they will get 10 records per page.
+
+To get much more about the context of the APIs, please run the server and headover this URL: `http://localhost:{PORT}/api/docs` and learn more about the API endpoints.
 
 ## API Documentation
 After you run the server, by going on this api: `/api/docs`
